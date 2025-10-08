@@ -11,22 +11,15 @@ use Alinandrei\RegistrationNumberValidator\Fieldtypes\RegistrationNumberValidato
 
 class ServiceProvider extends AddonServiceProvider
 {
-    /**
-     * Vite configuration
-     * 
-     */
     protected $vite = [ 
         'input' => [
             'resources/js/addon.js',
+            'resources/css/addon.css',
         ],
         'publicDirectory' => 'resources',
         'buildDirectory' => 'build',
     ];
 
-    /**
-     * Define routes
-     * 
-     */
     protected $routes = [
         // 'cp' => __DIR__.'/../routes/cp.php',
         'actions' => __DIR__.'/../routes/actions.php',
@@ -37,21 +30,15 @@ class ServiceProvider extends AddonServiceProvider
         RegistrationNumberValidator::class,
     ];
 
-    /**
-     * Register in the Service Container
-     * 
-     */
     public function register()
     {
         parent::register();
-
     }
+
     public function bootAddon()
     {
         RegistrationNumberValidator::register();
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'registration_number_validator');
-
-        Log::info("Addon Registration Number Validator loaded");
     }
 }
