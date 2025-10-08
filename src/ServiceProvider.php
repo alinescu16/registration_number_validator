@@ -33,6 +33,10 @@ class ServiceProvider extends AddonServiceProvider
     public function register()
     {
         parent::register();
+
+        $this->app->singleton(\Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService::class, function ($app) {
+            return new \Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService();
+        });
     }
 
     public function bootAddon()
