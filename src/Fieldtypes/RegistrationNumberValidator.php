@@ -36,10 +36,9 @@ class RegistrationNumberValidator extends Fieldtype
 
         $notice = "<div class='service_notice mt-4'>
             <div class='service_notice_title mb-2'>
-                <h4>Service Limitations and Markup Conditions.</h4>
-                <span class='service_notice_service_status $viesServiceStatusClass'> VIES VAT Validation current status: <strong>$viesServiceStatus</strong> </span>
+                <h3 class='text-md font-semibold'>Service Limitations and Markup Conditions.</h3>
             </div>
-            <div class='service_notice mb-2'>The validation of the registration numbers relies on <a href='https://ec.europa.eu/taxation_customs/vies/#/vat-validation' target='_blank' rel='noopener noreferrer'>VIES VAT Validation</a> service. If the service is unavailable, the validation button is not shown, company validation is skipped and input is treated as valid.</div>
+            <div class='service_notice mb-2'>The validation of the registration numbers relies on <a href='https://ec.europa.eu/taxation_customs/vies/#/vat-validation' target='_blank' rel='noopener noreferrer'>VIES VAT Validation</a> service. If the service is unavailable, the validation button is not shown, company validation is skipped and input is treated as valid. <span class='service_notice_service_status'>VAT Validation Service Status: <strong class='$viesServiceStatusClass'>$viesServiceStatus</strong></span></div>
             <div class='service_notice_field_layout'>If you are using a custom template on your website, for the validation to work propertly make sure to include the following components:
                 <ul class='list-disc ml-4 mt-1'>
                     <li>An input field of <code>type='text'</code> and <code>name='{{ handle }}'</code> for user input.</li>
@@ -90,15 +89,13 @@ class RegistrationNumberValidator extends Fieldtype
     } 
 
     /**
-     * Check if the VIES service is available.
+     * The view that should be used for the fieldtype.
      *
-     * @return bool
+     * @return string
      */
-    private function getVIESHeartBeat(): bool
+    public function view()
     {
-        $viesService = app(VIESHeartBeatService::class);
-
-        return $viesService->isServiceAvailable();
+        return 'registration_number_validator::registration_number_validator_field';
     }
 
     /**
@@ -134,12 +131,14 @@ class RegistrationNumberValidator extends Fieldtype
     }
 
     /**
-     * The view that should be used for the fieldtype.
+     * Check if the VIES service is available.
      *
-     * @return string
+     * @return bool
      */
-    public function view()
+    private function getVIESHeartBeat(): bool
     {
-        return 'registration_number_validator::registration_number_validator_field';
+        $viesService = app(VIESHeartBeatService::class);
+
+        return $viesService->isServiceAvailable();
     }
 }
