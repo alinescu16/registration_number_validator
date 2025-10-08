@@ -31,14 +31,13 @@ class RegistrationNumberValidator extends Fieldtype
      */
     protected function configFieldItems() : array
     {
-        $viesServiceAvailable = $this->getVIESHeartBeat() ? 'Available' : 'Unavailable';
-        $viesServiceAvailableClass = strtolower($viesServiceAvailable);
+        $viesServiceStatus = $this->getVIESHeartBeat() ? 'Available' : 'Unavailable';
+        $viesServiceStatusClass = $viesServiceStatus == 'Available' ? 'text-lime-500' : 'text-rose-500';
 
-        $notice = "
-        <div class='service_notice mt-4'>
+        $notice = "<div class='service_notice mt-4'>
             <div class='service_notice_title mb-2'>
                 <h4>Service Limitations and Markup Conditions.</h4>
-                <span class='service_notice_service_status $viesServiceAvailableClass'> VIES VAT Validation current status: <strong>$viesServiceAvailable</strong> </span>
+                <span class='service_notice_service_status $viesServiceStatusClass'> VIES VAT Validation current status: <strong>$viesServiceStatus</strong> </span>
             </div>
             <div class='service_notice mb-2'>The validation of the registration numbers relies on <a href='https://ec.europa.eu/taxation_customs/vies/#/vat-validation' target='_blank' rel='noopener noreferrer'>VIES VAT Validation</a> service. If the service is unavailable, the validation button is not shown, company validation is skipped and input is treated as valid.</div>
             <div class='service_notice_field_layout'>If you are using a custom template on your website, for the validation to work propertly make sure to include the following components:

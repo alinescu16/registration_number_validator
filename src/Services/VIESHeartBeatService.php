@@ -2,10 +2,20 @@
 
 namespace Alinandrei\RegistrationNumberValidator\Services;
 
+//TODO:: Fix this. Not ok.
+require __DIR__ . '../../../vendor/autoload.php';
+
+use DragonBe\Vies\Vies;
+use DragonBe\Vies\ViesException;
+use DragonBe\Vies\ViesServiceException;
+
+
 class VIESHeartBeatService
 {
     public function isServiceAvailable(): bool
     {
-        return false;
+        $vies = new Vies();
+
+        return $vies->getHeartBeat()->isAlive();
     }
 }

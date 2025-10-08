@@ -7,6 +7,7 @@ use Statamic\Providers\AddonServiceProvider;
 use Illuminate\Support\Facades\Log;
 
 use Alinandrei\RegistrationNumberValidator\Fieldtypes\RegistrationNumberValidator;
+use Alinandrei\RegistrationNumberValidator\Widgets\VIESHeartBeatWidget;
 
 
 class ServiceProvider extends AddonServiceProvider
@@ -20,6 +21,10 @@ class ServiceProvider extends AddonServiceProvider
         'buildDirectory' => 'build',
     ];
 
+    protected $widgets = [
+        VIESHeartBeatWidget::class,
+    ];
+    
     protected $routes = [
         // 'cp' => __DIR__.'/../routes/cp.php',
         'actions' => __DIR__.'/../routes/actions.php',
@@ -43,6 +48,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         RegistrationNumberValidator::register();
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'registration_number_validator');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'registration_number_validator');
     }
 }
