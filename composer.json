@@ -1,0 +1,37 @@
+{
+    "name": "alinandrei/registration_number_validator",
+    "autoload": {
+        "psr-4": {
+            "Alinandrei\\RegistrationNumberValidator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Alinandrei\\RegistrationNumberValidator\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "statamic/cms": "^5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Registration_Number_Validator",
+            "description": "Registration_Number_Validator addon"
+        },
+        "laravel": {
+            "providers": [
+                "Alinandrei\\RegistrationNumberValidator\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

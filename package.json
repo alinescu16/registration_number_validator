@@ -1,0 +1,18 @@
+{
+  "name": "registration_number_validator",
+  "version": "1.0.0",
+  "description": "> Registration_Number_Validator is a Statamic addon that does something pretty neat.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --watch"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "laravel-vite-plugin": "^1.0.0",
+    "vite": "^5.0.0",
+    "vue": "^3.3.0"
+  }
+}
+
