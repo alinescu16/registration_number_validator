@@ -6,7 +6,7 @@ use Statamic\Widgets\Widget;
 
 use Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService;
 
-class VIESHeartBeatWidget extends Widget
+class RegistrationNumberValidatorWidget extends Widget
 {
     protected static $title = 'VIES Heartbeat';
 

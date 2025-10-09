@@ -7,7 +7,7 @@ use Statamic\Fields\Fieldtype;
 use Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService;
 
 
-class RegistrationNumberValidator extends Fieldtype
+class RegistrationNumberValidatorField extends Fieldtype
 {
     // Set the fieldtype title
     protected static $title = 'VAT Validator';
