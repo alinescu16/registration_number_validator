@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const app = createApp(RegistrationNumberValidator)
+    const props = JSON.parse(el.dataset.config);
+
+    const app = createApp(RegistrationNumberValidator, props);
 
     app.mount(el);
 });

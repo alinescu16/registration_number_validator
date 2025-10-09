@@ -12,7 +12,19 @@ import "vue3-country-select/style.css"
 console.log('vue component');
 
 const props = defineProps({
-    value: String,
+    'id': String,
+    'default': String,
+    'handle': String,
+    'instructions': String,
+    'instructions_position': String,
+    'placeholder': String,
+    'label': String,
+    'old': String,
+    'value': String,
+    'validate': Array,
+    'show_validate_button': Boolean,
+    'validate_button_text': String,
+    'show_company_details_after_validation': String,
 });
 
 const emit = defineEmits(['input']);

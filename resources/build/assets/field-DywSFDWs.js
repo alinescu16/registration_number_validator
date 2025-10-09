@@ -1,1 +1,0 @@
-import{c as e,_ as n}from"./RegistrationNumberValidator-DlFozrXh.js";document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementById("registration-number-validator-container");if(!t)return;e(n).mount(t)});

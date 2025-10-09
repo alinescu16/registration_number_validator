@@ -1,0 +1,1 @@
+import{_ as o}from"./RegistrationNumberValidator-D--3ofbZ.js";Statamic.booting(()=>{console.log("Addon Registration Number Validator loaded - JS"),Statamic.$components.register("registration-number-validator",o)});
