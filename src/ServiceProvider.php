@@ -32,10 +32,6 @@ class ServiceProvider extends AddonServiceProvider
         // 'web' => __DIR__.'/../routes/web.php',
     ];
 
-    protected $fieldtypes = [
-        // RegistrationNumberValidatorField::class,
-    ];
-
     public function register()
     {
         parent::register();

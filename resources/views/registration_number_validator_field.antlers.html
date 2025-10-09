@@ -1,23 +1,21 @@
-{{ 
-    data = [ 
+{{
+    data = [
         'id' => {id}, 
-        'default' => {default},
+        'default' => {default ?? ""},
+        'label' => {display ?? ""},
         'handle' => {handle}, 
         'instructions' => {instructions ?? ""},
         'instructions_position' => {instructions_position ?? "below"},
-        'placeholder' => {placeholder ?? ""}, 
-        'label' => {label ?? ""},
+        'placeholder' => {placeholder ?? ""},
         'old' => {old},
         'value' => {value},
         'validate' => {validate},
         'show_validate_button' => {show_validate_button}, 
         'validate_button_text' => {validate_button_text}, 
         'show_company_details_after_validation' => {show_company_details_after_validation} 
-    ] 
+    ] | to_json
 }}
 
-<div id="registration-number-validator-container"
-     data-config={{ data | to_json }}>
-</div>
+<div id="registration-number-validator-container" data-config='{{ data }}'></div>
 
 {{ vite src="resources/js/field.js" directory="vendor/registration_number_validator/build" }}

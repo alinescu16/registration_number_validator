@@ -2,6 +2,7 @@
 export default {
   content: [
     './resources/**/*.antlers.html',
+    './resources/**/*.vue',
     './resources/test.html',
   ],
   safelist: [

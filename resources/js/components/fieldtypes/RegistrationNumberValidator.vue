@@ -1,6 +1,6 @@
 <template>
     <div>
-        <VueCountryCode @onSelect="onSelect" />
+        <VueCountryCode @onSelect="onSelect" searchPlaceholder="Search country..." />
     </div>
 </template>
 
@@ -9,8 +9,7 @@ import { ref } from 'vue';
 import { VueCountryCode } from 'vue3-country-select'
 import "vue3-country-select/style.css"
 
-console.log('vue component');
-
+/** Field Config */
 const props = defineProps({
     'id': String,
     'default': String,
@@ -30,6 +29,7 @@ const props = defineProps({
 const emit = defineEmits(['input']);
 
 function updateValue(newValue) {
+    console.log(newValue);
     emit('input', newValue);
 }
 

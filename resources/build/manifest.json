@@ -19,6 +19,13 @@
     "file": "assets/RegistrationNumberValidator-BP6r4eDX.js",
     "name": "RegistrationNumberValidator"
   },
+  "_RegistrationNumberValidator-BV3ANCGr.js": {
+    "file": "assets/RegistrationNumberValidator-BV3ANCGr.js",
+    "name": "RegistrationNumberValidator",
+    "css": [
+      "assets/RegistrationNumberValidator-Capur0wM.css"
+    ]
+  },
   "_RegistrationNumberValidator-BXNQijdT.js": {
     "file": "assets/RegistrationNumberValidator-BXNQijdT.js",
     "name": "RegistrationNumberValidator"
@@ -85,6 +92,13 @@
       "assets/RegistrationNumberValidator-Capur0wM.css"
     ]
   },
+  "_RegistrationNumberValidator-DqvtVT4J.js": {
+    "file": "assets/RegistrationNumberValidator-DqvtVT4J.js",
+    "name": "RegistrationNumberValidator",
+    "css": [
+      "assets/RegistrationNumberValidator-Capur0wM.css"
+    ]
+  },
   "_RegistrationNumberValidator-J3TrF5nf.js": {
     "file": "assets/RegistrationNumberValidator-J3TrF5nf.js",
     "name": "RegistrationNumberValidator",
@@ -128,6 +142,13 @@
       "assets/RegistrationNumberValidator-Capur0wM.css"
     ]
   },
+  "_RegistrationNumberValidator-jvKhl6MD.js": {
+    "file": "assets/RegistrationNumberValidator-jvKhl6MD.js",
+    "name": "RegistrationNumberValidator",
+    "css": [
+      "assets/RegistrationNumberValidator-Capur0wM.css"
+    ]
+  },
   "_RegistrationNumberValidator-kfaQFsFH.js": {
     "file": "assets/RegistrationNumberValidator-kfaQFsFH.js",
     "name": "RegistrationNumberValidator"
@@ -138,21 +159,21 @@
     "isEntry": true
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-CDjca3pY.js",
+    "file": "assets/addon-DokTnEpo.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-D--3ofbZ.js"
+      "_RegistrationNumberValidator-BV3ANCGr.js"
     ]
   },
   "resources/js/field.js": {
-    "file": "assets/field-BLpN7Gp1.js",
+    "file": "assets/field-OBPjZVZA.js",
     "name": "field",
     "src": "resources/js/field.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-D--3ofbZ.js"
+      "_RegistrationNumberValidator-BV3ANCGr.js"
     ]
   }
 }
