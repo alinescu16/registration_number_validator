@@ -7,6 +7,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/addon.js',
+                'resources/js/field.js',
                 'resources/css/addon.css'
             ],
             publicDirectory: 'resources',

@@ -15,6 +15,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $vite = [ 
         'input' => [
             'resources/js/addon.js',
+            'resources/js/field.js',
             'resources/css/addon.css',
         ],
         'publicDirectory' => 'resources',
@@ -32,7 +33,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        RegistrationNumberValidatorField::class,
+        // RegistrationNumberValidatorField::class,
     ];
 
     public function register()

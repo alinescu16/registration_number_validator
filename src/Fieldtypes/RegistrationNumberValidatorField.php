@@ -3,12 +3,14 @@
 namespace Alinandrei\RegistrationNumberValidator\Fieldtypes;
 
 use Statamic\Fields\Fieldtype;
+use Illuminate\Support\Facades\Log;
 
 use Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService;
 
 
 class RegistrationNumberValidatorField extends Fieldtype
 {
+
     // Set the fieldtype title
     protected static $title = 'VAT Validator';
 
@@ -87,6 +89,20 @@ class RegistrationNumberValidatorField extends Fieldtype
             ],
         );
     } 
+
+    /**
+     * Provides extra data to be passed to the fieldtype's view.
+     * This is the correct method for Statamic 5, replacing viewData().
+     *
+     * @return array
+     */
+    public function extraRenderableFieldData(): array
+    {
+        return array(
+            
+        );
+    }
+
 
     /**
      * The view that should be used for the fieldtype.
