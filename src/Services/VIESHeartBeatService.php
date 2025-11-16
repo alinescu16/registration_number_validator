@@ -2,9 +2,6 @@
 
 namespace Alinandrei\RegistrationNumberValidator\Services;
 
-//TODO:: Fix this. Not ok.
-require __DIR__ . '../../../vendor/autoload.php';
-
 use DragonBe\Vies\Vies;
 use DragonBe\Vies\ViesException;
 use DragonBe\Vies\ViesServiceException;
