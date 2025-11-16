@@ -5,6 +5,7 @@ namespace Alinandrei\RegistrationNumberValidator\Services;
 use DragonBe\Vies\Vies;
 use DragonBe\Vies\ViesException;
 use DragonBe\Vies\ViesServiceException;
+use Illuminate\Support\Facades\Log; // Added for logging
 
 class VIESValidationService
 {
@@ -36,7 +37,7 @@ class VIESValidationService
 
             $result = $this->vies->validateVat(
                 'RO',
-                '52665367',
+                '52665376',
                 $countryCode, 
                 $number
             );
@@ -60,10 +61,13 @@ class VIESValidationService
             ];
 
         } catch (ViesServiceException $e) {
+            Log::error('VIES Service Error: ' . $e->getMessage());
             return ['valid' => false, 'error' => 'VIES Service Error: ' . $e->getMessage()];
         } catch (ViesException $e) {
+            Log::error('VIES Validation Error: ' . $e->getMessage());
             return ['valid' => false, 'error' => 'Validation Error: ' . $e->getMessage()];
         } catch (\Exception $e) {
+            Log::error('Unexpected VIES Error: ' . $e->getMessage());
             return ['valid' => false, 'error' => 'An unexpected error occurred: ' . $e->getMessage()];
         }
     }

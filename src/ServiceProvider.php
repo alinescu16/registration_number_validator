@@ -3,16 +3,18 @@
 namespace Alinandrei\RegistrationNumberValidator;
 
 use Statamic\Providers\AddonServiceProvider;
-
 use Illuminate\Support\Facades\Log;
-
 use Alinandrei\RegistrationNumberValidator\Fieldtypes\RegistrationNumberValidatorField;
 use Alinandrei\RegistrationNumberValidator\Widgets\RegistrationNumberValidatorWidget;
-
+use Alinandrei\RegistrationNumberValidator\Services\RegistrationNumberValidatorService;
+use Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService;
+use Alinandrei\RegistrationNumberValidator\Services\VIESValidationService;
+use Alinandrei\RegistrationNumberValidator\Services\Validators\RomanianRegistrationNumberValidator;
+use Alinandrei\RegistrationNumberValidator\Services\Validators\GermanyRegistrationNumberValidator;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $vite = [ 
+    protected $vite = [
         'input' => [
             'resources/js/addon.js',
             'resources/js/field.js',
@@ -25,7 +27,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $widgets = [
         RegistrationNumberValidatorWidget::class,
     ];
-    
+
     protected $routes = [
         // 'cp' => __DIR__.'/../routes/cp.php',
         'actions' => __DIR__.'/../routes/actions.php',
@@ -36,30 +38,18 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::register();
 
-        $this->app->singleton(\Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService::class, function ($app) {
-            return new \Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService();
+        $this->app->singleton(VIESHeartBeatService::class, function ($app) {
+            return new VIESHeartBeatService();
         });
 
-        $this->app->singleton(\Alinandrei\RegistrationNumberValidator\Services\VIESValidationService::class, function ($app) {
-            return new \Alinandrei\RegistrationNumberValidator\Services\VIESValidationService();
+        $this->app->singleton(VIESValidationService::class, function ($app) {
+            return new VIESValidationService();
         });
 
-        Log::info("Adding RegistrationNumberValidatorService");
-
-        $this->app->singleton(Alinandrei\RegistrationNumberValidator\Services\RegistrationNumberValidatorService::class, function ($app) {
-            
-            Log::info("Before managers");
-            
-            $manager = new Alinandrei\RegistrationNumberValidator\Services\RegistrationNumberValidatorService(
-                $app->make(\Alinandrei\RegistrationNumberValidator\Services\VIESValidationService::class)
+        $this->app->singleton(RegistrationNumberValidatorService::class, function ($app) {
+            return new RegistrationNumberValidatorService(
+                $app->make(VIESValidationService::class)
             );
-
-            Log::info("Adding managers");
-
-            $manager->registerValidator('RO', new Alinandrei\RegistrationNumberValidator\Services\Validators\RomanianRegistrationNumberValidator());
-            $manager->registerValidator('DE', new Alinandrei\RegistrationNumberValidator\Services\Validators\GermanyRegistrationNumberValidator());
-            Log::info($manager->getValidators());
-            return $manager;
         });
     }
 
@@ -68,5 +58,14 @@ class ServiceProvider extends AddonServiceProvider
         RegistrationNumberValidatorField::register();
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'registration_number_validator');
+
+        try {
+            $manager = $this->app->make(RegistrationNumberValidatorService::class);
+
+            $manager->registerValidator('RO', new RomanianRegistrationNumberValidator());
+            $manager->registerValidator('DE', new GermanyRegistrationNumberValidator());
+        } catch (\Exception $e) {
+            Log::error('Failed to register VAT validators: ' . $e->getMessage());
+        }
     }
 }

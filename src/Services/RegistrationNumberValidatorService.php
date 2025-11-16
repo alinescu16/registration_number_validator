@@ -53,27 +53,34 @@ class RegistrationNumberValidatorService
     {
         $countryCode = strtoupper($countryCode);
         
-        Log::info($countryCode);
-        Log::info($this->validators);
+        $validatedData = array();
 
         if (isset($this->validators[$countryCode])) {
             $nationalResult = $this->validators[$countryCode]->validate($number);
             
-            Log::info($nationalResult);
-            
             if (! $nationalResult->isValid) {
                 return $nationalResult;
             }
+
+            $validatedData = $nationalResult->data ?? [];
+        } else {
+            Log::info("No national validator found for {$countryCode}, proceeding to VIES.");
         }
         
         $viesResult = $this->viesService->validateNumber($countryCode, $number);
 
-        Log::info($viesResult);
-
         if (! $viesResult['valid']) {
-            return new CountryValidatorResultDataTransferObject(false, $viesResult['error'] ?? 'Invalid VIES status.');
+            return new CountryValidatorResultDataTransferObject(
+                empty($validatedData) ? false : true, 
+                $viesResult['error'] ?? 'Invalid VIES status.', 
+                $validatedData
+            );
         }
+        
+        $validatedData = array_merge($validatedData, $viesResult['data'] ?? []);
 
-        return new CountryValidatorResultDataTransferObject(true, null, $viesResult['data'] ?? null);
+        Log::info($validatedData);
+
+        return new CountryValidatorResultDataTransferObject(true, null, $validatedData);
     }
 }
