@@ -39,6 +39,28 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->singleton(\Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService::class, function ($app) {
             return new \Alinandrei\RegistrationNumberValidator\Services\VIESHeartBeatService();
         });
+
+        $this->app->singleton(\Alinandrei\RegistrationNumberValidator\Services\VIESValidationService::class, function ($app) {
+            return new \Alinandrei\RegistrationNumberValidator\Services\VIESValidationService();
+        });
+
+        Log::info("Adding RegistrationNumberValidatorService");
+
+        $this->app->singleton(Alinandrei\RegistrationNumberValidator\Services\RegistrationNumberValidatorService::class, function ($app) {
+            
+            Log::info("Before managers");
+            
+            $manager = new Alinandrei\RegistrationNumberValidator\Services\RegistrationNumberValidatorService(
+                $app->make(\Alinandrei\RegistrationNumberValidator\Services\VIESValidationService::class)
+            );
+
+            Log::info("Adding managers");
+
+            $manager->registerValidator('RO', new Alinandrei\RegistrationNumberValidator\Services\Validators\RomanianRegistrationNumberValidator());
+            $manager->registerValidator('DE', new Alinandrei\RegistrationNumberValidator\Services\Validators\GermanyRegistrationNumberValidator());
+            Log::info($manager->getValidators());
+            return $manager;
+        });
     }
 
     public function bootAddon()

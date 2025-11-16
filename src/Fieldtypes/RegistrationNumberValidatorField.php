@@ -99,7 +99,9 @@ class RegistrationNumberValidatorField extends Fieldtype
     public function extraRenderableFieldData(): array
     {
         return array(
-            
+            // Pass the validation URL (from web.php) and CSRF token
+            'validation_url' => '/!/registration_number_validator/validate',
+            'csrf_token' => csrf_token(),
         );
     }
 

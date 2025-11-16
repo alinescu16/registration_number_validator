@@ -15,6 +15,7 @@
     "vue": "^3.3.0"
   },
   "dependencies": {
+    "vue3-country-region-select": "^1.0.0",
     "vue3-country-select": "^1.0.1"
   }
 }
