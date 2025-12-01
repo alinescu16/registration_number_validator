@@ -66,27 +66,34 @@
       "assets/RegistrationNumberValidator-2Ig6FBGq.css"
     ]
   },
+  "_RegistrationNumberValidator-kSJKVbTP.js": {
+    "file": "assets/RegistrationNumberValidator-kSJKVbTP.js",
+    "name": "RegistrationNumberValidator",
+    "css": [
+      "assets/RegistrationNumberValidator-2Ig6FBGq.css"
+    ]
+  },
   "resources/css/addon.css": {
-    "file": "assets/addon-BUco4zc7.css",
+    "file": "assets/addon-BAo_Jj0t.css",
     "src": "resources/css/addon.css",
     "isEntry": true
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-B6-ucyXV.js",
+    "file": "assets/addon-CCN_4Xvx.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-2N_fuO_V.js"
+      "_RegistrationNumberValidator-kSJKVbTP.js"
     ]
   },
   "resources/js/field.js": {
-    "file": "assets/field-CiADQ3r3.js",
+    "file": "assets/field-BdDIY7yU.js",
     "name": "field",
     "src": "resources/js/field.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-2N_fuO_V.js"
+      "_RegistrationNumberValidator-kSJKVbTP.js"
     ]
   }
 }
