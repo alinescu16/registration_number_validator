@@ -2,15 +2,19 @@ import RegistrationNumberValidator from './components/fieldtypes/RegistrationNum
 import { createApp } from 'vue';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const el = document.getElementById('registration-number-validator-container');
+    // Find ALL validator containers on the page
+    const elements = document.querySelectorAll('.rnv-container');
 
-    if ( ! el ) {
-        return;
-    }
+    elements.forEach(el => {
+        // Prevent double mounting
+        if (el.__vue_app__) return;
 
-    const props = JSON.parse(el.dataset.config);
-
-    const app = createApp(RegistrationNumberValidator, props);
-
-    app.mount(el);
+        try {
+            const props = JSON.parse(el.dataset.config);
+            const app = createApp(RegistrationNumberValidator, props);
+            app.mount(el);
+        } catch (e) {
+            console.error('Registration Validator: Failed to mount component', e);
+        }
+    });
 });

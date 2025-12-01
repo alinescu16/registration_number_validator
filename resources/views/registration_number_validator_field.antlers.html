@@ -1,30 +1,24 @@
 {{
-    
     props = [
         'id' => {id},
-        'default' => {default ?? ""},
-        'label' => {display ?? ""},
-        'handle' => {handle},
-        'instructions' => {instructions ?? ""},
-        'instructions_position' => {instructions_position ?? "below"},
         'placeholder' => {placeholder ?? ""},
-        'old' => {old | to_array},
-        'value' => {value | to_array},
-        'validate' => {validate},
-        'show_validate_button' => {show_validate_button},
-        'validate_button_text' => {validate_button_text},
-        'show_company_details_after_validation' => {show_company_details_after_validation},
-        'validation_url' => {validation_url},
+        'show_validate_button' => {show_validate_button ?? true},
+        'validate_button_text' => {validate_button_text ?? "Validate"},
+        'show_company_details_after_validation' => {show_company_details_after_validation ?? true},
+        'validation_url' => "/!/registration_number_validator/validate",
         'csrf_token' => {csrf_token},
         'country_input_name' => {handle} ~ '_country',
         'number_input_name' => {handle} ~ '_number',
     ] | to_json | htmlspecialchars
 }}
 
-<div id="registration-number-validator-container" data-config='{{ props  }}' >
-    <div class="text-sm text-gray-500">Loading validator...</div>
+<div class="rnv-container" id="rnv-{{ id }}" data-config='{{ props }}'>
+    <div class="animate-pulse flex gap-2">
+        <div class="h-10 w-16 bg-gray-200 rounded"></div>
+        <div class="h-10 flex-1 bg-gray-200 rounded"></div>
+        <div class="h-10 w-24 bg-gray-200 rounded"></div>
+    </div>
 </div>
 
 {{ vite src="resources/js/field.js" directory="vendor/registration_number_validator/build" }}
-
 {{ vite src="resources/css/addon.css" directory="vendor/registration_number_validator/build" }}

@@ -41,7 +41,10 @@ class RegistrationNumberValidatorController extends CpController
         return response()->json([
             'valid' => true,
             'data' => array_merge(
-                $result->data, 
+                $result->data,
+                array(
+                    'vies_status' => $result->message,  // Refactor the DTO, message should be a vies related array
+                ),
                 array(
                     'country_code' => strtoupper($request->input('country_code'))
                 )

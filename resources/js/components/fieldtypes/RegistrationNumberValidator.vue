@@ -25,6 +25,7 @@ const props = defineProps({
     number_input_name: { type: String, default: 'number' },
     validation_url: { type: String, required: true },
     csrf_token: { type: String, required: true },
+    vies_available: { type: Boolean, default: true }
 });
 
 /** State */
@@ -34,6 +35,7 @@ const isLoading = ref(false);
 const validationStatus = ref('idle');
 const validationResult = ref(null);
 const validationError = ref(null);
+const viesValidationResult = ref(null);
 
 onMounted(() => {
     if (props.old) {
@@ -62,9 +64,40 @@ const validateButton = computed(() => {
     return {
         text: props.validate_button_text || 'Validate',
         click: validateNumber,
-        disabled: !country.value || !number.value || isLoading.value,
+        disabled: !props.vies_available || !country.value || !number.value || isLoading.value,
     };
 });
+
+// Helper to format keys for display (e.g., "error_details" -> "Error Details")
+const formatKey = (key) => {
+    return key.toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+
+    // Safely parse YYYY-MM-DD
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return dateString;
+
+    const year = parseInt(parts[0], 10);
+    const monthIndex = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    
+    const date = new Date(year, monthIndex, day);
+    if (isNaN(date.getTime())) return dateString;
+
+    const monthName = date.toLocaleString('default', { month: 'long' });
+    
+    // Function to add ordinal suffix
+    const getOrdinal = (n) => {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+
+    return `${getOrdinal(day)} ${monthName} ${year}`;
+};
 
 async function validateNumber() {
     isLoading.value = true;
@@ -101,10 +134,14 @@ async function validateNumber() {
             validationStatus.value = 'error';
             return;
         }
-        
+
         if (data.valid) {
-            validationResult.value = data.data; // Assign the inner data object directly
+            validationResult.value = data.data; 
             validationStatus.value = 'success';
+
+            if ( data.data.vies_status ) {
+                viesValidationResult.value = data.data.vies_status;
+            }
         } else {
             validationError.value = data.error || "Invalid registration number.";
             validationStatus.value = 'error';
@@ -158,33 +195,44 @@ async function validateNumber() {
                 />
             </div>
 
-            <div v-if="validationStatus !== 'idle'" class="flex-1 items-center">
+            <!-- Status Icons Area -->
+            <div class="flex-1 items-center">
             
-                <!-- Loading State: Simple Tailwind Spinner -->
-                <div v-if="validationStatus === 'validating'" class="flex items-center text-gray-500">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <!-- VIES Unavailable Warning -->
+                <div v-if="!props.vies_available" class="flex items-center text-amber-500" title="VIES Service Unavailable">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <span class="text-sm">Validating...</span>
+                    <span class="text-xs font-medium">Service Down</span>
                 </div>
 
-                <!-- Success State: Green Checkmark with Scale-in Animation -->
-                <div v-if="validationStatus === 'success'" class="flex items-center text-green-600 animate-scale-in">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span class="text-sm font-medium">Valid</span>
-                </div>
+                <!-- Validation States -->
+                <template v-else>
+                    <!-- Loading State -->
+                    <div v-if="validationStatus === 'validating'" class="flex items-center text-gray-500">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm">Validating...</span>
+                    </div>
 
-                <!-- Error State: Red X with Shake Animation -->
-                <div v-if="validationStatus === 'error'" class="flex items-center text-red-600 animate-shake">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <!-- Error text is shown in the details block below, but we can show a quick label here -->
-                    <span class="text-sm font-medium">Error</span>
-                </div>
+                    <!-- Success State -->
+                    <div v-if="validationStatus === 'success'" class="flex items-center text-green-600 animate-scale-in">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-sm font-medium">Valid</span>
+                    </div>
+
+                    <!-- Error State -->
+                    <div v-if="validationStatus === 'error'" class="flex items-center text-red-600 animate-shake">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-sm font-medium">Error</span>
+                    </div>
+                </template>
             </div>
         </div>
 
@@ -197,16 +245,38 @@ async function validateNumber() {
             <div v-if="validationStatus === 'error'" class="flex items-center text-red-600">
                 <span class="text-sm font-medium">{{ validationError }}</span>
             </div>
-            
+
             <!-- Success Text -->
             <div v-if="validationStatus === 'success'" class="space-y-1">
+                <!-- Special Message Handling (User Request) -->
+                <div v-if="viesValidationResult" class="mb-3">
+                    <!-- Case: Message is String -> Show Warning Icon + Text -->
+                    <div v-if="typeof viesValidationResult === 'string'" class="flex items-start align-center pl-2">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#b2911d">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span class="text-sm font-medium">{{ viesValidationResult }}</span>
+                    </div>
+
+                    <!-- Case: Message is Object/Array -> Show Key: Value List -->
+                    <div v-else-if="typeof viesValidationResult === 'object'" class="pl-2 text-sm text-gray-800">
+                         <template v-for="(value, key) in viesValidationResult" :key="key">
+                            <p class="mb-1"><strong>{{ formatKey(key) }}:</strong> {{ value }}</p>
+                         </template>
+                    </div>
+                </div>
+
+                <!-- Existing Country Data Logic -->
                 <div class="pl-2 text-sm text-gray-800" v-if="validationResult.country_code === 'RO'">
                     <p><strong>Company:</strong> {{ validationResult.date_generale?.denumire }}</p>
                     <p><strong>Address:</strong> {{ validationResult.date_generale?.adresa }}</p>
-                    <p><strong>Registered:</strong> {{ validationResult.date_generale?.data_inregistrare }}</p>
-                    <p class="mt-2 text-xs text-gray-500">
-                        {{ validationResult.stare_inregistrare }}
-                    </p>
+                    <p><strong>Registered:</strong> {{ formatDate(validationResult.date_generale?.data_inregistrare) }}</p>
+                </div>
+
+                <!-- Generic VIES Fallback (Only show if not RO, to avoid duplicate data) -->
+                <div class="pl-2 text-sm text-gray-800" v-else>
+                    <p><strong>Company:</strong> {{ validationResult.name }}</p>
+                    <p><strong>Address:</strong> {{ validationResult.address }}</p>
                 </div>
             </div>
         </div>
@@ -214,7 +284,6 @@ async function validateNumber() {
 </template>
 
 <style>
-/* Scoped styles for the country selector dropdown */
 .registration-validator-field .country-selector .v3-country-code {
     border-radius: 0.375rem; 
     border: 1px solid #d1d5db; 
@@ -225,7 +294,6 @@ async function validateNumber() {
     border-color: #6d28d9; 
     box-shadow: 0 0 0 1px #6d28d9; 
 }
-/* Simple keyframe animations for the icons */
 @keyframes scaleIn {
   0% { transform: scale(0); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }

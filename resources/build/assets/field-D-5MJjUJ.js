@@ -1,0 +1,1 @@
+import{c as o,_ as n}from"./RegistrationNumberValidator-dfPt_udQ.js";document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".rnv-container").forEach(e=>{if(!e.__vue_app__)try{const t=JSON.parse(e.dataset.config);o(n,t).mount(e)}catch(t){console.error("Registration Validator: Failed to mount component",t)}})});
