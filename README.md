@@ -35,7 +35,7 @@ Usage
 
 You have two ways to use this addon on your frontend:
 
-### Option 1: Plug & Play (Recommended)
+### Option 1: Plug & Play
 
 Use the included Antlers tag to render a complete, styled validation component. This includes the country selector, input field, validation logic, loading states, and error handling.
 
@@ -49,59 +49,25 @@ Use the included Antlers tag to render a complete, styled validation component. 
 
 #### Parameters
 
-Parameter
+Parameter - Type - Default - Description
 
-Type
+`handle` - String _Required_ - Unique identifier. Generates inputs named `{handle}_country` and `{handle}_number`.
 
-Default
+`placeholder` - String - `""` - Placeholder text for the input field.
 
-Description
+`show_validate_button` - Boolean - `true` - Whether to display the "Validate" button next to the input.
 
-`handle`
+`validate_button_text` - String - `"Validate"` - Text to display on the button.
 
-String
+`show_company_details_after_validation` - Boolean - `true` - If true, displays company name and address below the input on success.
 
-_Required_
 
-Unique identifier. Generates inputs named `{handle}_country` and `{handle}_number`.
-
-`placeholder`
-
-String
-
-`""`
-
-Placeholder text for the input field.
-
-`show_validate_button`
-
-Boolean
-
-`true`
-
-Whether to display the "Validate" button next to the input.
-
-`validate_button_text`
-
-String
-
-`"Validate"`
-
-Text to display on the button.
-
-`show_company_details_after_validation`
-
-Boolean
-
-`true`
-
-If true, displays company name and address below the input on success.
-
-### Option 2: Fully Custom (Headless)
+### Option 2: Headless
 
 If you need complete control over the UI (e.g., custom layout, your own icons, or integration with a multi-step wizard), you can bypass the Vue component and interact directly with the Validation API.
 
-We recommend using **Alpine.js** for a lightweight implementation.
+I recommend using **Alpine.js** for a lightweight implementation.
+
 
 #### The Endpoint
 
@@ -218,46 +184,3 @@ Copy this boilerplate into your Antlers template to get started:
         }
     }
     </script>
-    
-
-API Reference
--------------
-
-### Validation Request
-
-**POST** `/!/registration_number_validator/validate`
-
-**Payload:**
-
-    {
-      "country_code": "RO",
-      "number": "123456"
-    }
-    
-
-### Validation Response
-
-**Success (200 OK):**
-
-    {
-      "valid": true,
-      "data": {
-        "name": "Company Name",
-        "address": "Company Address",
-        "date_generale": {
-           "denumire": "Company Name (RO Specific)",
-           "adresa": "Full Address",
-           "data_inregistrare": "YYYY-MM-DD",
-           "stare_inregistrare": "ACTIVE"
-        },
-        "country_code": "RO"
-      }
-    }
-    
-
-**Error (422 Unprocessable Entity):**
-
-    {
-      "valid": false,
-      "error": "The provided registration number is invalid."
-    }
