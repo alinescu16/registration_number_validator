@@ -36,11 +36,13 @@ class VIESValidationService
             }
 
             $result = $this->vies->validateVat(
+                $countryCode, 
+                $number,
                 'RO',
                 '52665376',
-                $countryCode, 
-                $number
             );
+
+            Log::info((array) $result);
 
             if (! $result->isValid()) {
                 return [
@@ -62,7 +64,7 @@ class VIESValidationService
 
         } catch (ViesServiceException $e) {
             Log::error('VIES Service Error: ' . $e->getMessage());
-            return ['valid' => false, 'error' => 'VIES Service Error: ' . $e->getMessage()];
+            return ['valid' => false, 'error' => 'VIES Service Error. Please try again later.'];
         } catch (ViesException $e) {
             Log::error('VIES Validation Error: ' . $e->getMessage());
             return ['valid' => false, 'error' => 'Validation Error: ' . $e->getMessage()];

@@ -251,18 +251,23 @@ async function validateNumber() {
                 <!-- Special Message Handling (User Request) -->
                 <div v-if="viesValidationResult" class="mb-3">
                     <!-- Case: Message is String -> Show Warning Icon + Text -->
-                    <div v-if="typeof viesValidationResult === 'string'" class="flex items-start align-center pl-2">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#b2911d">
+                    <div v-if="typeof viesValidationResult === 'string'" class="flex items-center pl-2 text-sm text-gray-800">
+                        <span class="text-amber-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#b2911d">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
+                        </span>
                         <span class="text-sm font-medium">{{ viesValidationResult }}</span>
                     </div>
 
                     <!-- Case: Message is Object/Array -> Show Key: Value List -->
-                    <div v-else-if="typeof viesValidationResult === 'object'" class="pl-2 text-sm text-gray-800">
-                         <template v-for="(value, key) in viesValidationResult" :key="key">
-                            <p class="mb-1"><strong>{{ formatKey(key) }}:</strong> {{ value }}</p>
-                         </template>
+                    <div v-else-if="typeof viesValidationResult === 'object'" class="flex items-center pl-2 text-sm text-gray-800">
+                        <span class="text-green-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </span>
+                        <span class="text-sm font-medium">{{ viesValidationResult['result'] }}</span>
                     </div>
                 </div>
 

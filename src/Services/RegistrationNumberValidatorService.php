@@ -75,7 +75,7 @@ class RegistrationNumberValidatorService
             );
         }
 
-        $validatedData = array_merge($validatedData ?? [], $viesResult['data'] ?? []);
+        $validatedData = array_merge($validatedData ?? [], $viesResult['valid'] ? array( 'vies_status' => array( 'result' => 'The provided registration number is registered for cross-trading in the EU.', 'vies_success' => true ) ) : []);
 
         return new CountryValidatorResultDataTransferObject(true, null, $validatedData);
     }

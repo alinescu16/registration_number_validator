@@ -44,15 +44,15 @@ class RomanianRegistrationNumberValidator implements CountryValidatorInterface
             $body = $response->json(); 
             
             if (empty($body)) {
-                return new CountryValidatorResultDataTransferObject(false, "The ANAF service returned an empty response.");
+                return new CountryValidatorResultDataTransferObject(false, "The Romanian Validation Service (ANAF) returned an empty response.");
             }
 
             if (!empty($body['notFound']) && in_array($cui, $body['notFound'])) {
-                return new CountryValidatorResultDataTransferObject(false, "The CUI is not registered in the ANAF database.");
+                return new CountryValidatorResultDataTransferObject(false, "Invalid romanian Registration Number.");
             }
 
             if (empty($body['found']) || !isset($body['found'][0])) {
-                return new CountryValidatorResultDataTransferObject(false, "The CUI was not found in the ANAF response.");
+                return new CountryValidatorResultDataTransferObject(false, "Valid romanian Registration Number but no data found.");
             }
 
             $foundData = $body['found'][0] ?? [];
@@ -61,10 +61,10 @@ class RomanianRegistrationNumberValidator implements CountryValidatorInterface
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("ANAF Connection Exception: " . $e->getMessage());
-            return new CountryValidatorResultDataTransferObject(false, "Connection error while contacting the ANAF service. Please try again.");
+            return new CountryValidatorResultDataTransferObject(false, "Connection error while contacting the Romanian Validation Service (ANAF) service. Please try again.");
         } catch (\Exception $e) {
             Log::error("ANAF Validation Exception: " . $e->getMessage());
-            return new CountryValidatorResultDataTransferObject(false, "A technical error occurred during ANAF validation: " . $e->getMessage());
+            return new CountryValidatorResultDataTransferObject(false, "A technical error occurred during Romanian Validation Service (ANAF) validation: " . $e->getMessage());
         }
     }
 }
