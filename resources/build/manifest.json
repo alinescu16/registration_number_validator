@@ -17,6 +17,13 @@
       "assets/RegistrationNumberValidator-2Ig6FBGq.css"
     ]
   },
+  "_RegistrationNumberValidator-B7-tWKrC.js": {
+    "file": "assets/RegistrationNumberValidator-B7-tWKrC.js",
+    "name": "RegistrationNumberValidator",
+    "css": [
+      "assets/RegistrationNumberValidator-2Ig6FBGq.css"
+    ]
+  },
   "_RegistrationNumberValidator-BYzwPafs.js": {
     "file": "assets/RegistrationNumberValidator-BYzwPafs.js",
     "name": "RegistrationNumberValidator",
@@ -79,21 +86,21 @@
     "isEntry": true
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-CCN_4Xvx.js",
+    "file": "assets/addon-C8w6I9iF.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-kSJKVbTP.js"
+      "_RegistrationNumberValidator-B7-tWKrC.js"
     ]
   },
   "resources/js/field.js": {
-    "file": "assets/field-BdDIY7yU.js",
+    "file": "assets/field-BM_cGUbt.js",
     "name": "field",
     "src": "resources/js/field.js",
     "isEntry": true,
     "imports": [
-      "_RegistrationNumberValidator-kSJKVbTP.js"
+      "_RegistrationNumberValidator-B7-tWKrC.js"
     ]
   }
 }
