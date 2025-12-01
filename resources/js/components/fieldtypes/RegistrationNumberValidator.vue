@@ -6,7 +6,6 @@ import "vue3-country-select/style.css";
 // Import your custom components
 import TextField from '../TextField.vue';
 import Button from '../Button.vue';
-import Status from '../Status.vue';
 
 const europeanCountries = ref([
   'AL', 'AD', 'AM', 'AT', 'BY', 'BE', 'BA', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 
@@ -15,7 +14,6 @@ const europeanCountries = ref([
   'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA', 'VA'
 ]);
 
-// These props are passed from your Blade/Antlers tag
 const props = defineProps({
     placeholder: String,
     old: Object, 
@@ -33,6 +31,7 @@ const props = defineProps({
 const country = ref(null);
 const number = ref('');
 const isLoading = ref(false);
+const validationStatus = ref('idle');
 const validationResult = ref(null);
 const validationError = ref(null);
 
@@ -43,12 +42,21 @@ onMounted(() => {
     }
 });
 
-// Compute the initial country for the dropdown
 const initialCountry = computed(() => country.value || 'RO');
 
 const onCountrySelect = (data) => {
     country.value = data.iso2 || null; 
+    
+    if (validationStatus.value !== 'validating') {
+        validationStatus.value = 'idle';
+    }
 }
+
+watch(number, () => {
+    if (validationStatus.value !== 'validating') {
+        validationStatus.value = 'idle';
+    }
+});
 
 const validateButton = computed(() => {
     return {
@@ -60,11 +68,13 @@ const validateButton = computed(() => {
 
 async function validateNumber() {
     isLoading.value = true;
+    validationStatus.value = 'validating';
     validationResult.value = null;
     validationError.value = null;
 
     if (!props.csrf_token) {
         validationError.value = "CSRF token not found. Please refresh the page.";
+        validationStatus.value = 'error';
         isLoading.value = false;
         return;
     }
@@ -88,17 +98,20 @@ async function validateNumber() {
 
         if (!response.ok) {
             validationError.value = data.error || data.message || "An error occurred.";
+            validationStatus.value = 'error';
             return;
         }
         
         if (data.valid) {
-            validationResult.value = data.data;
+            validationResult.value = data.data; // Assign the inner data object directly
+            validationStatus.value = 'success';
         } else {
             validationError.value = data.error || "Invalid registration number.";
+            validationStatus.value = 'error';
         }
-
     } catch (e) {
         validationError.value = e.message || "An unknown error occurred.";
+        validationStatus.value = 'error';
     } finally {
         isLoading.value = false;
     }
@@ -108,13 +121,12 @@ async function validateNumber() {
 <template>
     <div class="registration-validator-field">
         
-        <!-- Hidden inputs to submit the values in the form -->
         <input type="hidden" :name="props.country_input_name" :value="country" />
         <input type="hidden" :name="props.number_input_name" :value="number" />
 
-        <div class="flex items-start space-x-2">
+        <div class="flex items-center space-x-2">
             <!-- Country Selector -->
-            <div class="w-max-content country-selector">
+            <div class="max-w-max country-selector">
                 <VueCountryCode 
                     @onSelect="onCountrySelect" 
                     searchPlaceholder="Search country..."
@@ -127,8 +139,8 @@ async function validateNumber() {
                     }"/>
             </div>
 
-            <!-- Use your custom 'TextField' component -->
-            <div class="flex-1">
+            <!-- TextField -->
+            <div class="flex-1 max-w-60">
                 <TextField
                     v-model="number"
                     @update:modelValue="number = $event"
@@ -137,48 +149,97 @@ async function validateNumber() {
                 />
             </div>
 
-            <div class="flex-1">
+            <!-- Validate Button -->
+            <div class="flex-1 max-w-max">
                 <Button 
                     v-if="props.show_validate_button" 
                     :buttons="[validateButton]"
                     class="px-4 py-2 text-sm font-semibold text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-0 w-max-content"
                 />
             </div>
+
+            <div v-if="validationStatus !== 'idle'" class="flex-1 items-center">
+            
+                <!-- Loading State: Simple Tailwind Spinner -->
+                <div v-if="validationStatus === 'validating'" class="flex items-center text-gray-500">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-sm">Validating...</span>
+                </div>
+
+                <!-- Success State: Green Checkmark with Scale-in Animation -->
+                <div v-if="validationStatus === 'success'" class="flex items-center text-green-600 animate-scale-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-sm font-medium">Valid</span>
+                </div>
+
+                <!-- Error State: Red X with Shake Animation -->
+                <div v-if="validationStatus === 'error'" class="flex items-center text-red-600 animate-shake">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <!-- Error text is shown in the details block below, but we can show a quick label here -->
+                    <span class="text-sm font-medium">Error</span>
+                </div>
+            </div>
         </div>
 
-        <div v-if="isLoading" class="mt-2 text-sm text-gray-600">Validating...</div>
-        
-        <div v-if="props.show_company_details_after_validation && (validationResult || validationError)" class="validation-results mt-3 p-3 border rounded-md">
-            <!-- Error Message -->
-            <div v-if="validationError" class="flex items-center">
-                <Status status="false" class="mr-2" />
-                <span class="text-red-600">{{ validationError }}</span>
+
+        <!-- DETAILS / TEXT OUTPUT AREA -->
+        <div v-if="props.show_company_details_after_validation && (validationStatus === 'success' || validationStatus === 'error')" 
+             class="validation-results mt-3 p-3 border rounded-md transition-all duration-300">
+            
+            <!-- Error Text -->
+            <div v-if="validationStatus === 'error'" class="flex items-center text-red-600">
+                <span class="text-sm font-medium">{{ validationError }}</span>
             </div>
             
-            <!-- Success Message -->
-            <div v-if="validationResult" class="space-y-1">
-                <div class="flex items-center">
-                    <Status status="true" class="mr-2" />
-                    <strong class="text-green-600">Validation Successful</strong>
-                </div>
-                <div class="pl-6 text-sm">
-                    <p><strong>Company:</strong> {{ validationResult.name }}</p>
-                    <p><strong>Address:</strong> {{ validationResult.address }}</p>
+            <!-- Success Text -->
+            <div v-if="validationStatus === 'success'" class="space-y-1">
+                <div class="pl-2 text-sm text-gray-800" v-if="validationResult.country_code === 'RO'">
+                    <p><strong>Company:</strong> {{ validationResult.date_generale?.denumire }}</p>
+                    <p><strong>Address:</strong> {{ validationResult.date_generale?.adresa }}</p>
+                    <p><strong>Registered:</strong> {{ validationResult.date_generale?.data_inregistrare }}</p>
+                    <p class="mt-2 text-xs text-gray-500">
+                        {{ validationResult.stare_inregistrare }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
 <style>
 /* Scoped styles for the country selector dropdown */
 .registration-validator-field .country-selector .v3-country-code {
-    border-radius: 0.375rem; /* rounded-md */
-    border: 1px solid #d1d5db; /* border-gray-300 */
-    padding: 0.5rem 0.75rem; /* py-2 px-3 */
+    border-radius: 0.375rem; 
+    border: 1px solid #d1d5db; 
+    padding: 0.5rem 0.75rem; 
     width: 100%;
 }
 .registration-validator-field .country-selector .v3-country-code:focus-within {
-    border-color: #6d28d9; /* focus:border-purple-600 */
-    box-shadow: 0 0 0 1px #6d28d9; /* focus:ring-1 focus:ring-purple-600 */
+    border-color: #6d28d9; 
+    box-shadow: 0 0 0 1px #6d28d9; 
+}
+/* Simple keyframe animations for the icons */
+@keyframes scaleIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+.animate-shake {
+    animation: shake 0.3s ease-in-out;
 }
 </style>

@@ -51,8 +51,6 @@ class RegistrationNumberValidatorService
      */
     public function validate(string $countryCode, string $number): CountryValidatorResultDataTransferObject
     {
-        $countryCode = strtoupper($countryCode);
-        
         $validatedData = array();
 
         if (isset($this->validators[$countryCode])) {
@@ -76,10 +74,8 @@ class RegistrationNumberValidatorService
                 $validatedData
             );
         }
-        
-        $validatedData = array_merge($validatedData, $viesResult['data'] ?? []);
 
-        Log::info($validatedData);
+        $validatedData = array_merge($validatedData ?? [], $viesResult['data'] ?? []);
 
         return new CountryValidatorResultDataTransferObject(true, null, $validatedData);
     }

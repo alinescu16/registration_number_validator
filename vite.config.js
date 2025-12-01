@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
     plugins: [
@@ -14,6 +15,14 @@ export default defineConfig({
             buildDirectory: 'build',
         }),
         vue(),
+        viteStaticCopy({
+            targets: [
+                {
+                    src: 'assets',
+                    dest: '' 
+                }
+            ]
+        }),
     ],
     server: {
         host: '0.0.0.0',

@@ -28,6 +28,7 @@ class RegistrationNumberValidatorController extends CpController
             $request->input('number')
         );
 
+        Log::info('RegistrationNumberValidatorController - Validation Result:');
         Log::info((array) $result);
 
         if (! $result->isValid) {
@@ -39,7 +40,12 @@ class RegistrationNumberValidatorController extends CpController
 
         return response()->json([
             'valid' => true,
-            'data' => $result->data
+            'data' => array_merge(
+                $result->data, 
+                array(
+                    'country_code' => strtoupper($request->input('country_code'))
+                )
+            )
         ]);
     }
 }

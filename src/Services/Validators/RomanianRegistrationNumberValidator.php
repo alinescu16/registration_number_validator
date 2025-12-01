@@ -42,8 +42,6 @@ class RomanianRegistrationNumberValidator implements CountryValidatorInterface
                 ->post($apiUrl, $payload);
             
             $body = $response->json(); 
-
-            Log::info($body);
             
             if (empty($body)) {
                 return new CountryValidatorResultDataTransferObject(false, "The ANAF service returned an empty response.");
@@ -57,7 +55,7 @@ class RomanianRegistrationNumberValidator implements CountryValidatorInterface
                 return new CountryValidatorResultDataTransferObject(false, "The CUI was not found in the ANAF response.");
             }
 
-            $foundData = $body['found'][0];
+            $foundData = $body['found'][0] ?? [];
             
             return new CountryValidatorResultDataTransferObject(true, null, $foundData);
 
